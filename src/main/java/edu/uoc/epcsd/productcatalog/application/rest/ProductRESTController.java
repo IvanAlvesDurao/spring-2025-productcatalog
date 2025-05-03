@@ -48,7 +48,16 @@ public class ProductRESTController {
     // TODO: add the code for the missing system operations here: 
     // use the corresponding mapping HTTP request annotation with the parameter: "/search"
     // and call the method findProductsByCriteria(FindProductsByCriteria findProductsCriteria)
-    // which call the corresponding findProductsByExample method 
+    // which call the corresponding findProductsByExample method
+    @GetMapping("/search")
+    public List<Product> findProductsByCriteria(FindProductsByCriteria findProductsCriteria) {
+        log.trace("findProductsByCriteria");
+        return productService.findProductsByExample(Product.builder()
+                .name(findProductsCriteria.getName())
+                .categoryId(findProductsCriteria.getCategoryId())
+                .build()
+        );
+    }
 
     @PostMapping
     public ResponseEntity<Long> createProduct(@RequestBody @NotNull @Valid CreateProductRequest createProductRequest) {
@@ -80,6 +89,14 @@ public class ProductRESTController {
     // TODO: add the code for the missing system operations here: 
     // use the corresponding mapping HTTP request annotation with the parameter: "/{productId}"
     // and call the method removeProduct(@PathVariable @NotNull Long productId)
-    // which call the corresponding deleteProduct method 
+    // which call the corresponding deleteProduct method
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> removeProduct(@PathVariable @NotNull Long productId) {
+        log.trace("removeProduct");
+
+        productService.deleteProduct(productId);
+
+       return ResponseEntity.noContent().build();
+    }
 
 }
